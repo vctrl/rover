@@ -36,6 +36,8 @@
     ```sh
     make file FILE=/path/to/commands.txt
     ```
+  Пример файла data/simple_test, содержит простой путь (1,1) N => (-1,4) E
+
 
 - Запуск в интерактивном режиме:
     ```sh
