@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  rover:
+    build: .
+    image: mars-rover:latest
+    container_name: mars-rover
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command: ["./rover"]
