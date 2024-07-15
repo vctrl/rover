@@ -1,6 +1,7 @@
-# syntax=docker/dockerfile:1
+ARG GOLANG_VERSION
+ARG ALPINE_VERSION
 
-FROM golang:1.22-alpine AS build
+FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS build
 
 WORKDIR /app
 
@@ -12,7 +13,7 @@ COPY . .
 RUN go build -o /rover cmd/rover/main.go
 
 # runtime image
-FROM alpine:3.18
+FROM alpine:${ALPINE_VERSION}
 
 WORKDIR /root/
 
