@@ -52,8 +52,11 @@ func (a *App) InteractiveControl(input <-chan string, output chan<- string) erro
 			a.Rover.Rotate(-1)
 		case "left":
 			a.Rover.Rotate(1)
+		case "exit":
+			close(output)
+			return nil
 		default:
-			output <- fmt.Sprintf("Invalid command %v, use: up, down, left, right.", command)
+			output <- fmt.Sprintf("Некорректная команда %v, используйте стрелки вверх, вниз, влево, вправо.", command)
 			continue
 		}
 
@@ -70,11 +73,7 @@ func (a *App) CaptureInput(input chan<- string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open keyboard: %w", err)
 	}
-	defer func() {
-		if err := keyboard.Close(); err != nil {
-			fmt.Printf("failed to close keyboard: %v\n", err)
-		}
-	}()
+	defer keyboard.Close()
 
 	for {
 		_, key, err := keyboard.GetKey()
@@ -83,6 +82,7 @@ func (a *App) CaptureInput(input chan<- string) error {
 		}
 
 		if key == keyboard.KeyCtrlC {
+			input <- "exit"
 			close(input)
 			break
 		}
@@ -97,22 +97,19 @@ func (a *App) CaptureInput(input chan<- string) error {
 		case keyboard.KeyArrowLeft:
 			input <- "left"
 		default:
-			fmt.Println("Неверная команда, используйте стрелки для управления.")
+			input <- "invalid"
 		}
 	}
 
 	return nil
 }
 
-func (a *App) HandleCommands(commands string) {
+func (a *App) HandleCommands(commands string) (models.Coordinates, models.Direction, error) {
 	position, direction, err := a.CalculateRoute(commands)
 	if err != nil {
-		fmt.Println(HandleError(err))
-		return
+		return models.Coordinates{}, "", err
 	}
-
-	fmt.Printf("Расчёт выполнен успешно. Конечное положение Марсохода: (%d, %d), направление: %s\n",
-		position.X, position.Y, direction)
+	return position, direction, nil
 }
 
 func HandleError(err error) string {

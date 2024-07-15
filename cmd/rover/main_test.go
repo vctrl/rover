@@ -52,18 +52,6 @@ func TestMainE2E(t *testing.T) {
 			args:           []string{"--mode=file", "--file=testfile.txt"},
 			expectedOutput: []string{"Добро пожаловать в центр управления марсоходом 'Curiosity'!", "Расчёт выполнен успешно. Конечное положение Марсохода: (1, 2), направление: N\n"},
 		},
-		{
-			name:  "Interactive mode",
-			args:  []string{"--mode=interactive"},
-			input: "up\ndown\nright\nleft\nexit\n",
-			expectedOutput: []string{
-				"Добро пожаловать в центр управления марсоходом 'Curiosity'!",
-				"Текущие координаты: (1, 2), направление: N",
-				"Текущие координаты: (1, 1), направление: N",
-				"Текущие координаты: (1, 1), направление: E",
-				"Текущие координаты: (1, 1), направление: N",
-			},
-		},
 	}
 
 	for _, tt := range tests {

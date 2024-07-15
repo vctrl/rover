@@ -4,14 +4,13 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/manifoldco/promptui"
+	"github.com/spf13/cobra"
 	"mars-rover/internal/app"
 	"mars-rover/internal/optimization"
 	"mars-rover/internal/rover"
 	"os"
 	"strings"
-
-	"github.com/manifoldco/promptui"
-	"github.com/spf13/cobra"
 )
 
 const (
@@ -58,14 +57,26 @@ func main() {
 					fmt.Printf("Ошибка получения команд: %v\n", err)
 					return
 				}
-				a.HandleCommands(commands)
+				position, direction, err := a.HandleCommands(commands)
+				if err != nil {
+					fmt.Println(app.HandleError(err))
+					return
+				}
+				fmt.Printf("Расчёт выполнен успешно. Конечное положение Марсохода: (%d, %d), направление: %s\n",
+					position.X, position.Y, direction)
 			case ModeFile:
 				commands, err := GetCommandsFromFile(filePath)
 				if err != nil {
 					fmt.Printf("Ошибка получения команд: %v\n", err)
 					return
 				}
-				a.HandleCommands(commands)
+				position, direction, err := a.HandleCommands(commands)
+				if err != nil {
+					fmt.Println(app.HandleError(err))
+					return
+				}
+				fmt.Printf("Расчёт выполнен успешно. Конечное положение Марсохода: (%d, %d), направление: %s\n",
+					position.X, position.Y, direction)
 			default:
 				fmt.Println("Неизвестный режим")
 			}

@@ -102,7 +102,7 @@ func TestInteractiveControl(t *testing.T) {
 			commands: []string{"up", "invalid", "left"},
 			expectedOutputs: []string{
 				"Текущие координаты: (1, 1), направление: N",
-				"Invalid command, use: up, down, left, right.",
+				"Некорректная команда invalid, используйте стрелки вверх, вниз, влево, вправо.",
 				"Текущие координаты: (1, 1), направление: N",
 			},
 		},
