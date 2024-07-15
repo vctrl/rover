@@ -11,6 +11,9 @@ func NewOptimizer() *Optimizer {
 	return &Optimizer{}
 }
 
+// OptimizeRoute метод для оптимизации последовательности команд в последовательность движений
+// упрощает множественные последовательности из вперёд-назад и поворотов,
+// чтобы марсоход не бегал много раз назад-вперёд или не крутился на месте
 func (o *Optimizer) OptimizeRoute(commands string) ([]models.Move, error) {
 	if len(commands) == 0 {
 		return []models.Move{}, nil
@@ -26,14 +29,14 @@ func (o *Optimizer) OptimizeRoute(commands string) ([]models.Move, error) {
 		switch command {
 		case 'F', 'B':
 			steps = move(command, steps)
-			if state == models.Rotation {
+			if state == models.Rotation && turns%4 != 0 {
 				moves = append(moves, models.Move{Type: models.Rotation, Value: turns % 4})
 				turns = 0
 			}
 			state = models.Movement
 		case 'R', 'L':
 			turns = rotate(command, turns)
-			if state == models.Movement {
+			if state == models.Movement && steps != 0 {
 				moves = append(moves, models.Move{Type: models.Movement, Value: steps})
 				steps = 0
 			}
@@ -41,6 +44,10 @@ func (o *Optimizer) OptimizeRoute(commands string) ([]models.Move, error) {
 		default:
 			return nil, fmt.Errorf("%w: %c", models.ErrIncorrectSymbol, command)
 		}
+	}
+
+	if state == models.Rotation && turns%4 == 0 || state == models.Movement && steps == 0 {
+		return moves, nil
 	}
 
 	switch state {

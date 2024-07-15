@@ -58,7 +58,6 @@ func TestOptimizeRoute(t *testing.T) {
 			commands: "FFLRB",
 			expectedMoves: []models.Move{
 				{Type: models.Movement, Value: 2},
-				{Type: models.Rotation, Value: 0}, // optimized rotation, which is actually ignored
 				{Type: models.Movement, Value: -1},
 			},
 			expectedErr: nil,

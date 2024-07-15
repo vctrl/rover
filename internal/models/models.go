@@ -27,7 +27,10 @@ const (
 	Rotation MoveType = "Rotation"
 )
 
+// Move структура для описания движения марсохода
 type Move struct {
-	Type  MoveType
+	// Type тип движения
+	Type MoveType
+	// Value при Type = Movement Value означает количество шагов, при Type = Rotation Value означает количество поворотов на 90 градусов против часовой стрелки
 	Value int
 }

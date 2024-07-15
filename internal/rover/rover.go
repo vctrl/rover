@@ -57,7 +57,7 @@ func (r *Rover) Rotate(steps int) {
 	r.Direction = directions[newIndex]
 }
 
-// todo move to pkg?
+// todo move to some common package...
 func indexOf(dir models.Direction, directions []models.Direction) int {
 	for i, d := range directions {
 		if d == dir {
