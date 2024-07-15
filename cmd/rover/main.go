@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"mars-rover/internal/app"
-	"mars-rover/internal/models"
 	"mars-rover/internal/optimization"
 	"mars-rover/internal/rover"
 	"os"
@@ -48,6 +47,7 @@ func main() {
 
 			switch mode {
 			case ModeInteractive:
+				fmt.Println("Используйте стрелки для управления марсоходом. Нажмите Ctrl+C для выхода.")
 				err := HandleInteractiveMode(a)
 				if err != nil {
 					fmt.Printf("Ошибка в интерактивном режиме: %v\n", err)
@@ -58,14 +58,14 @@ func main() {
 					fmt.Printf("Ошибка получения команд: %v\n", err)
 					return
 				}
-				HandleCommands(a, commands)
+				a.HandleCommands(commands)
 			case ModeFile:
 				commands, err := GetCommandsFromFile(filePath)
 				if err != nil {
 					fmt.Printf("Ошибка получения команд: %v\n", err)
 					return
 				}
-				HandleCommands(a, commands)
+				a.HandleCommands(commands)
 			default:
 				fmt.Println("Неизвестный режим")
 			}
@@ -78,13 +78,6 @@ func main() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Printf("Ошибка выполнения команды: %v\n", err)
 	}
-}
-
-func HandleError(err error) string {
-	if errors.Is(err, models.ErrIncorrectSymbol) {
-		return fmt.Sprintf("Некорректный путь: %v, путь должен состоять только из символов F, B, R, L", err)
-	}
-	return fmt.Sprintf("Ошибка: %v", err)
 }
 
 func SelectMode() (string, error) {
@@ -144,30 +137,15 @@ func HandleInteractiveMode(a *app.App) error {
 	}()
 
 	go func() {
-		for {
-			var command string
-			fmt.Scan(&command)
-			if command == "exit" {
-				close(input)
-				break
-			}
-			input <- command
+		err := a.CaptureInput(input)
+		if err != nil {
+			fmt.Printf("Ошибка ввода: %v\n", err)
 		}
 	}()
 
 	for msg := range output {
 		fmt.Println(msg)
 	}
+
 	return nil
-}
-
-func HandleCommands(a *app.App, commands string) {
-	position, direction, err := a.CalculateRoute(commands)
-	if err != nil {
-		fmt.Println(HandleError(err))
-		return
-	}
-
-	fmt.Printf("Расчёт выполнен успешно. Конечное положение Марсохода: (%d, %d), направление: %s\n",
-		position.X, position.Y, direction)
 }
