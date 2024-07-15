@@ -47,9 +47,9 @@ func (a *App) InteractiveControl(input <-chan string, output chan<- string) erro
 		case "down":
 			a.Rover.Move(-1)
 		case "right":
-			a.Rover.Rotate(1)
-		case "left":
 			a.Rover.Rotate(-1)
+		case "left":
+			a.Rover.Rotate(1)
 		default:
 			output <- "Invalid command, use: up, down, left, right."
 			continue

@@ -47,7 +47,7 @@ func (r *Rover) Move(steps int) {
 }
 
 func (r *Rover) Rotate(steps int) {
-	directions := []models.Direction{models.North, models.East, models.South, models.West}
+	directions := []models.Direction{models.North, models.West, models.South, models.East}
 	currentIndex := indexOf(r.Direction, directions)
 	newIndex := (currentIndex + steps) % len(directions)
 	if newIndex < 0 {

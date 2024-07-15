@@ -63,6 +63,22 @@ func TestOptimizeRoute(t *testing.T) {
 			expectedErr: nil,
 		},
 		{
+			name:     "Route #1 (1, 1) => (-1, 4)",
+			commands: "FFLBFRLBBFFRRBBLFR",
+			expectedMoves: []models.Move{
+				{Type: models.Movement, Value: 2}, // FF
+				{Type: models.Rotation, Value: 1}, // L
+				// ignore RLBBFFRRBB
+				{Type: models.Rotation, Value: -2}, // RR
+				{Type: models.Movement, Value: -2}, // BB
+				{Type: models.Rotation, Value: 1},  // L
+				{Type: models.Movement, Value: 1},  // F
+				{Type: models.Rotation, Value: -1},
+				// R
+			},
+			expectedErr: nil,
+		},
+		{
 			name:        "Invalid command",
 			commands:    "X",
 			expectedErr: models.ErrIncorrectSymbol,
