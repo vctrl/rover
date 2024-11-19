@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  rover:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GOLANG_VERSION: ${GOLANG_VERSION}
+        ALPINE_VERSION: ${ALPINE_VERSION}
+    environment:
+      - GOLANG_VERSION=${GOLANG_VERSION}
+      - ALPINE_VERSION=${ALPINE_VERSION}
+    stdin_open: true
+    tty: true

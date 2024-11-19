@@ -1,0 +1,20 @@
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - deadcode
+    - ineffassign
+    - unused
+    - structcheck
+    - varcheck
+    - goimports
+    - lll
+
+linters-settings:
+  lll:
+    line-length: 120
+
+run:
+  tests: true
